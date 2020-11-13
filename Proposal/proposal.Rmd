@@ -1,0 +1,65 @@
+---
+output:
+  word_document: default
+  pdf_document: default
+---
+
+\begin{center}
+\textbf{Project Proposal: Sofia Air Quality Analysis}
+\end{center}
+
+### Group Members
+
+**Yukun Fang (yfang67), Mengkun Chen (mchen373), Mengqi Li (mli653), Runze You (ryou3)**
+
+### Data Description
+
+URL: https://www.kaggle.com/hmavrodiev/sofia-air-quality-dataset
+
+Soifa air quality data set describes daily five air-quality measurements-PM2.5, PM10, pressure, temperature and humidity from July 2017 to July 2019. 
+
+```{r}
+bme1707<-read.csv("data/2017-07_bme280sof.csv", header = TRUE)
+bme1707<-bme1707[,-1]
+bme1707$timestamp<-sub("T.*$", "", bme1707$timestamp)
+head(bme1707)
+```
+
+```{r}
+sds1707<-read.csv("data/2017-07_sds011sof.csv", header = TRUE)
+sds1707<-sds1707[,-1]
+sds1707$timestamp<-sub("T.*$", "", sds1707$timestamp)
+head(sds1707)
+```
+
+### Variables: 
+
+sensor_id: meteorological sensors reporting air-quality measurements
+
+location, lat, log: geographic information of sensors around Sofia
+
+timestamp: observation dates (originally specified to seconds)
+
+P1, P2: coarse particles measurements, representing PM2.5 and PM10 respectively
+
+pressure, temperature, humidity: meteorological measurements
+
+### Statistical Problems
+
+For this dataset, we try to solve the problems as follows:
+
+1. Are there any trends in pressure, temperature, humidity, PM2.5 and PM10?
+
+2. Is there any relationship between pressure, temperature, humidity and PM2.5/PM10?
+
+3. How do pressure, temperature and humidity influence PM2.5 and PM10 respectively?
+
+4. Can we use this dataset to forecast the future PM2.5 and PM10 statistics?
+
+### Statistical Methods
+
+We intend to use time series plot to figure out the trend for these variables. Plus, we plan to use linear regression to interpret the relationship between pressure, temperature, humidity and PM2.5/PM10. 
+
+### Computation Plan
+
+We plan to use CHTC to do parallel computation for the .csv files of each month. Then we merge the small datasets into one large dataset and do statistical analysis. 
