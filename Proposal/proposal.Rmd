@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 ---
 
 \begin{center}
@@ -58,7 +58,7 @@ For this dataset, we try to solve the problems as follows:
 
 ### Statistical Methods
 
-We intend to use time series plot to figure out the trend for these variables. Plus, we plan to use linear regression to interpret the relationship between pressure, temperature, humidity and PM2.5/PM10. 
+We intend to use time series plot to figure out the trend for these variables. Plus, we plan to use linear regression to interpret the relationship between pressure, temperature, humidity and PM2.5/PM10. Additionally we would use AIC or BIC to select the best model. Last we will use cross validation to test our model.
 
 ### Computation Plan
 
