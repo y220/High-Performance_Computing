@@ -1,0 +1,24 @@
+universe = vanilla
+
+
+log    =    log/sds-chtc_$(Cluster)_$(Process).log
+error  =  error/sds-chtc_$(Cluster)_$(Process).err
+output = output/sds-chtc_$(Cluster)_$(Process).out
+
+executable = ./project.sh
+
+
+arguments = $(num)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = http://proxy.chtc.wisc.edu/SQUID/chtc/R402.tar.gz, sds/$(num).csv, sds.R, packages.tar.gz, packages2.tar.gz, sds/
+
+
+request_cpus = 1
+request_memory = 2GB
+request_disk = 8GB 
+
+
+queue num from sds.txt 
+
