@@ -58,3 +58,11 @@ ggplot()+ geom_line(data=t,aes(x=time, y=hum_mean,group=1))+
   labs(title = "Humidity")
 
 
+mydata <- data.frame( 
+  Group = c(rep("TRUE",length(t)), rep("FALSE",length(f))),
+  Frequency = c(t, f)
+)
+ggboxplot(mydata, x="Group", y = "Frequency", color = "Group", palette = "jco",add = "jitter",short.panel.labs = FALSE)+
+  stat_compare_means(method = "t.test",label.y=100)
+
+
