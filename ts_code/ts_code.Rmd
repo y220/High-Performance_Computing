@@ -1,0 +1,182 @@
+---
+title: "Model"
+author: '111'
+date: "12/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# P1
+
+## Seasonal Trendency
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+rm(list=ls())
+
+## Load data
+setwd("../TS_Data")
+
+list <- list.files()
+data <- data.frame()
+for(i in list){
+  path <- i
+  data <- rbind(data, read.csv(file = path, header = TRUE))
+}
+
+## Seperate with day, month, year
+library(tidyverse)
+library(lubridate)
+data=data%>%
+  separate(timestamp,into=c("year","month","day"),sep="-")
+temp=data%>%
+  unite(id,year,month,day,sep="")
+data=data%>%
+  mutate(id=temp$id)%>%
+  select(id,everything())
+```
+
+
+There exists seasonal influence from the first plot. The second plot shows the polution message during one year.
+
+
+```{r echo=FALSE}
+## Seasonal Influence
+library(grid)
+daily=data%>%
+  mutate(date=make_date(year,month,day))%>%
+  group_by(date)%>%
+  summarize(mean=mean(P1))
+p1=daily%>%
+  ggplot(aes(date,mean))+
+  geom_line()
+p2=daily%>%
+  ggplot(aes(x=year(date),y=mean,group=year(date)))+
+  geom_boxplot()+
+  guides(fill=FALSE)
+grid.newpage() 
+pushViewport(viewport(layout = grid.layout(2,1))) 
+vplayout <- function(x,y){
+  viewport(layout.pos.row = x, layout.pos.col = y)
+}
+print(p1, vp = vplayout(1,1))   
+print(p2, vp = vplayout(2,1)) 
+
+```
+
+
+## Reduce Seasonal infect.
+
+
+```{r echo=FALSE}
+P1.aov <- aov(P1 ~ month,data=data)
+summary(P1.aov)
+```
+
+```{r echo=FALSE}
+P1.res=P1.aov$residuals
+library(modelr)
+p1=daily%>%
+  ggplot(aes(date,P1.res))+
+  geom_ref_line(h=0)+
+  geom_line(color="grey50")+
+  geom_smooth()
+print(p1)  
+```
+
+
+## GARCH(1,1) to predict
+
+```{r echo=FALSE}
+library(fGarch, quietly = TRUE)
+mod1 <- garchFit(~ 1 + garch(1,1), data=P1.res, 
+                 cond.dist="std", trace=FALSE)
+summary(mod1)
+```
+
+```{r echo=FALSE}
+p1 <- predict(mod1, n.ahead=5)[["standardDeviation"]]
+intercept=P1.aov$coefficients[1]+P1.aov$coefficients[7]
+pred.tab <- tibble(
+  "predict steps"=1:5,
+  "Prediction"=p1+intercept,
+)
+knitr::kable(pred.tab, digits=4)
+```
+
+
+
+# P10
+
+## Seasonal Trendency
+
+
+There exists seasonal influence from the first plot. The second plot shows the polution message during one year.
+
+
+```{r echo=FALSE}
+data$P1=data$P2
+## Seasonal Influence
+library(grid)
+daily=data%>%
+  mutate(date=make_date(year,month,day))%>%
+  group_by(date)%>%
+  summarize(mean=mean(P1))
+p1=daily%>%
+  ggplot(aes(date,mean))+
+  geom_line()
+p2=daily%>%
+  ggplot(aes(x=year(date),y=mean,group=year(date)))+
+  geom_boxplot()+
+  guides(fill=FALSE)
+grid.newpage() 
+pushViewport(viewport(layout = grid.layout(2,1))) 
+vplayout <- function(x,y){
+  viewport(layout.pos.row = x, layout.pos.col = y)
+}
+print(p1, vp = vplayout(1,1))   
+print(p2, vp = vplayout(2,1)) 
+
+```
+
+## Reduce Seasonal infect.
+
+
+```{r echo=FALSE}
+P1.aov <- aov(P1 ~ month,data=data)
+summary(P1.aov)
+P1.res=P1.aov$residuals
+p1=daily%>%
+  ggplot(aes(date,P1.res))+
+  geom_ref_line(h=0)+
+  geom_line(color="grey50")+
+  geom_smooth()
+print(p1)  
+```
+
+
+## GARCH(1,1) to predict
+
+```{r echo=FALSE}
+library(fGarch, quietly = TRUE)
+mod2 <- garchFit(~ 1 + garch(1,1), data=P1.res, 
+                 cond.dist="std", trace=FALSE)
+summary(mod1)
+```
+
+
+```{r echo=FALSE}
+p2 <- predict(mod2, n.ahead=5)[["standardDeviation"]]
+intercept=P1.aov$coefficients[1]+P1.aov$coefficients[7]
+pred.tab <- tibble(
+  "predict steps"=1:5,
+  "Prediction"=p2+intercept,
+)
+knitr::kable(pred.tab, digits=4)
+```
+
+
+
