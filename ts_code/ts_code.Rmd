@@ -41,6 +41,7 @@ data=data%>%
 
 
 There exists seasonal influence from the first plot. The second plot shows the polution message during one year.
+It is obvious that there exists seasonal influence during each season, from the following graphs. Besides, we have already test that the pollution level is extremely high during winter compared with non-winter.
 
 
 ```{r echo=FALSE}
@@ -70,6 +71,8 @@ print(p2, vp = vplayout(2,1))
 
 ## Reduce Seasonal infect.
 
+Hence, in order to reduce the seasonal infect, intuitively, we conduct an ANOVA model, to get the influence from each month. The summary of ANOVA table is showing below. Another graph is about residual plot. Clearly, with smooth method, the data have less seasonal trendency.
+
 
 ```{r echo=FALSE}
 P1.aov <- aov(P1 ~ month,data=data)
@@ -89,6 +92,8 @@ print(p1)
 
 
 ## GARCH(1,1) to predict
+
+Obviously, there could not be homoscedasticity from volatility. Hence, we choose GARCH model to deal with this data-set. A GARCH(1,1) with smaller AIC and BIC compared with other GARCH model is our choice. And the prediction of future five days (from 2019-07-01 to 2019-07-05) with seasonal influence is showing in the following table. 
 
 ```{r echo=FALSE}
 library(fGarch, quietly = TRUE)
