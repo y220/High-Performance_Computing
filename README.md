@@ -2,7 +2,7 @@
 
 ## [Data](https://www.kaggle.com/hmavrodiev/sofia-air-quality-dataset) 
 This website contains the data what we use to analysis.
-## [Summary]](stat_605_Report.pdf) 
+## [Summary](stat_605_Report.pdf) 
 This summary contains an updated version of project.pdf that incorporating feedback from your peers, instructors and TAs.
 ## [Proposal](Proposal/proposal.pdf) 
 This summary contains:
